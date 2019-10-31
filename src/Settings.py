@@ -5,5 +5,5 @@ FPS = 60
 
 TILED_MAP_FILE = '../assets/stage1.tmx'
 
-CAMERA_SPEED = 10
-PLAYER_SPEED = 5
+CAMERA_SPEED = 2
+PLAYER_SPEED = 7

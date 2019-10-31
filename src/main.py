@@ -85,6 +85,7 @@ class game():
     def update(self):
         self.clock.tick(self.fps)
         self.player.update()
+        self.player.checkCollisionWithGround(self.grounds)
         self.camera.moveAhead()
         
     def draw(self):

@@ -24,3 +24,11 @@ class Player:
         
         if self.moveAhead:
             self.rect.centery -= CAMERA_SPEED
+        
+
+    def checkCollisionWithGround(self, grounds):
+        hits = pygame.sprite.spritecollide(self, grounds, False)
+        if hits:
+            print('Game over!')
+            pygame.quit()
+            exit()
