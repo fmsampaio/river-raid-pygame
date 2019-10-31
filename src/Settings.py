@@ -7,3 +7,4 @@ TILED_MAP_FILE = '../assets/stage1.tmx'
 
 CAMERA_SPEED = 2
 PLAYER_SPEED = 7
+ENEMY1_SPEED = 2

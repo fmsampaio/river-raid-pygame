@@ -7,6 +7,7 @@ from Settings import *
 from Ground import Ground
 from Camera import Camera
 from Player import Player
+from Enemy import Enemy
 
 class game():
 
@@ -32,6 +33,7 @@ class game():
         self.mapRect = self.mapImg.get_rect()
 
         self.grounds = pygame.sprite.Group()
+        self.enemies = pygame.sprite.Group()
 
         self.cameraCenter = (0, (- self.mapRect.height + SCREEN_SIZE[1]) * TILESCALE)
         self.camera = Camera(self.mapRect.width, self.mapRect.height, self.cameraCenter)
@@ -40,10 +42,13 @@ class game():
             if obj.name == 'ground':
                 self.grounds.add(Ground(obj.x * TILESCALE, obj.y * TILESCALE, obj.width * TILESCALE, obj.height * TILESCALE))
             elif obj.name == 'goal':
-                self.goal = (obj.x, obj.y)
+                self.goal = (obj.x * TILESCALE, obj.y * TILESCALE)
             elif obj.name == 'player': 
-                self.player = Player(obj.x, obj.y, self.screen)
+                self.player = Player(obj.x * TILESCALE, obj.y*TILESCALE, self.screen)
                 self.player.moveAhead = True
+            elif obj.name == 'enemy1':
+                self.enemies.add(Enemy(obj.x * TILESCALE, obj.y * TILESCALE, self.screen))
+
            
     def gameRun(self):
         self.new()
@@ -61,21 +66,11 @@ class game():
             
         key = pygame.key.get_pressed()
         
-        """
-        if key[pygame.K_w]:
-            if self.cameraCenter[1] < -(CAMERA_SPEED * 2):
-                self.cameraCenter = (self.cameraCenter[0], self.cameraCenter[1] + CAMERA_SPEED)
-        elif key[pygame.K_s]:
-            if self.cameraCenter[1] > (-self.mapRect.height + SCREEN_SIZE[1]):
-                self.cameraCenter = (self.cameraCenter[0], self.cameraCenter[1] - CAMERA_SPEED)
-        """
-
         if key[pygame.K_RIGHT]:
             self.player.moveRight = True
         else:
             self.player.moveRight = False
         
-
         if key[pygame.K_LEFT]:
             self.player.moveLeft = True
         else:
@@ -87,11 +82,15 @@ class game():
         self.player.update()
         self.player.checkCollisionWithGround(self.grounds)
         self.camera.moveAhead()
+        for enemy in self.enemies:
+            enemy.update(self.grounds)
         
     def draw(self):
         self.screen.fill((0, 0, 0))
         self.screen.blit(self.map.terrainLayer, self.camera.apply_rect(self.mapRect))
         self.player.draw(self.camera)
+        for enemy in self.enemies:
+            enemy.draw(self.camera)
         pygame.display.flip()
 
 if __name__ == '__main__':
