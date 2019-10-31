@@ -5,8 +5,6 @@ from Settings import *
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y, display):
         super().__init__()
-        self.x = x
-        self.y = y
         self.rect = pygame.Rect(x, y, 32 * TILESCALE, 32 * TILESCALE)
         self.tmpEnemyColor = (255, 100, 100)
         self.display = display

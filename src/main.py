@@ -8,6 +8,7 @@ from Ground import Ground
 from Camera import Camera
 from Player import Player
 from Enemy import Enemy
+from Bullet import Bullet
 
 class game():
 
@@ -34,6 +35,7 @@ class game():
 
         self.grounds = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
+        self.bullets = pygame.sprite.Group()
 
         self.cameraCenter = (0, (- self.mapRect.height + SCREEN_SIZE[1]) * TILESCALE)
         self.camera = Camera(self.mapRect.width, self.mapRect.height, self.cameraCenter)
@@ -63,6 +65,9 @@ class game():
             if e.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+            if e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_SPACE:
+                    self.bullets.add(Bullet(self.player, self.screen))
             
         key = pygame.key.get_pressed()
         
@@ -84,6 +89,10 @@ class game():
         self.camera.moveAhead()
         for enemy in self.enemies:
             enemy.update(self.grounds)
+        for bullet in self.bullets:
+            bullet.update(self.enemies)
+        self.checkCollisionsBulletsWithEnemies()
+        self.checkCollisionsPlayerWithEnemies()
         
     def draw(self):
         self.screen.fill((0, 0, 0))
@@ -91,7 +100,23 @@ class game():
         self.player.draw(self.camera)
         for enemy in self.enemies:
             enemy.draw(self.camera)
+        for bullet in self.bullets:
+            bullet.draw(self.camera)
         pygame.display.flip()
+
+    def checkCollisionsBulletsWithEnemies(self):
+        for bullet in self.bullets:
+            for enemy in self.enemies:
+                if bullet.rect.colliderect(enemy.rect):
+                    self.bullets.remove(bullet)
+                    self.enemies.remove(enemy)
+    
+    def checkCollisionsPlayerWithEnemies(self):
+        for enemy in self.enemies:
+            if self.player.rect.colliderect(enemy.rect):
+                print('Game over!')
+                pygame.quit()
+                exit()
 
 if __name__ == '__main__':
     a = game()
