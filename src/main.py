@@ -30,8 +30,9 @@ class game():
         except:
             self.mapPath = os.path.join("assets/", "stage1.tmx")
             self.map = mapLoader(self.mapPath)
-        self.mapImg = self.map.makeMap()
-        self.mapRect = self.mapImg.get_rect()
+        
+        self.map.makeMap()
+        self.mapRect = self.map.terrainLayer.get_rect()
 
         self.grounds = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
